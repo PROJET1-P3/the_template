@@ -1,0 +1,16 @@
+service: spring-boot-serverless
+provider:
+  name: aws
+  runtime: java17
+
+package:
+  artifact: build/distributions/spring-boot-serverless-0.0.1-SNAPSHOT.zip
+
+functions:
+  springBootServerless:
+    handler: com.example.the_template.LambdaHandler::handleRequest
+    events:
+      - http:
+          path: /students
+          method: get
+    timeout: 30
