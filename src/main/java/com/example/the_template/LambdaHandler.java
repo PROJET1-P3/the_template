@@ -16,7 +16,9 @@ public class LambdaHandler implements RequestStreamHandler {
 
     static {
         try {
-            handler = SpringBootLambdaContainerHandler.getAwsProxyHandler(TheTemplateApplication.class);
+            if (handler == null) {
+                handler = SpringBootLambdaContainerHandler.getAwsProxyHandler(TheTemplateApplication.class);
+            }
         } catch (ContainerInitializationException e) {
             // Re-throw the exception to force another cold start
             e.printStackTrace();

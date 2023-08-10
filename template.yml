@@ -8,9 +8,8 @@ Description: >
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
-    Timeout: 20
-    MemorySize: 512
-
+    Timeout: 120
+    MemorySize: 2048
 Resources:
   HelloWorldFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -20,15 +19,22 @@ Resources:
       Runtime: java17
       Architectures:
         - x86_64
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-0eca1792670ec4ada
+        SubnetIds:
+          - subnet-012d2ea61a9b17c93
+          - subnet-09b0467a30a54f87a
+          - subnet-0c3ad5a9b08f26bbd
       SnapStart:
         ApplyOn: PublishedVersions
-      MemorySize: 512
+      MemorySize: 2048
       Events:
         HelloWorld:
-          Type: HttpApi # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /{proxy+}
-            Method: any
+            Path: /students
+            Method: get
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
@@ -36,7 +42,7 @@ Outputs:
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
   HelloWorldApi:
     Description: "API Gateway endpoint URL for Prod stage for Hello World function"
-    Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
   HelloWorldFunction:
     Description: "Hello World Lambda Function ARN"
     Value: !GetAtt HelloWorldFunction.Arn
